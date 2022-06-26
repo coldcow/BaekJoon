@@ -10,21 +10,18 @@ int main(void)
 
 	scanf("%d", &input);
 
-	int count = 1;
-	for (int i = 0; i < input; i++) {
+	for (int i = 0; i < input; i++) 
 		scanf("%d %d", &x[i], &y[i]);
 
-		for (int j = 0; j < input; j++) {
-			if (i == j)
-				continue;
-			if ((x[i] > x[j] && y[i] < y[j]) || (x[i] < x[j] && y[i] > y[j])) {
-				rank[i] = count;
-				rank[j] = count;
-				continue;
-			}
+	for (int j = 0; j < input; j++) {
+		int count = 1;
+		for (int k = 0; k < input; k++) {
+			if (x[j] < x[k] && y[j] < y[k])
+				count++;
 		}
+		printf("%d", count + 1);
 	}
-
+	
 
 	return 0;
 }
