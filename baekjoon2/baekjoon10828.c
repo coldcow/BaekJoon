@@ -2,40 +2,41 @@
 #include <stdio.h>
 #include <string.h> 
 
-int number[100001];
-int count = 0;
+typedef int element;
 
-void push(int num) {
-	number[count] = num;
-	count++;
+typedef struct {
+	element data[100001];
+	int size;
+} Stack;
+
+void push(Stack *stack, int num) {
+	stack->data[stack->size++] = num;
 }
 
-void pop() {
-	if (count != 0) {
-		count--;
-		printf("%d\n", number[count]);
-		number[count] = 0;
+void pop(Stack* stack) {
+	if (stack->size != 0) {
+		printf("%d\n", stack->data[--stack->size]);
 	}
 
 	else
 		printf("%d\n", -1);
-
 }
  
-void top() {
-	if (count != 0)
-		printf("%d\n", number[count - 1]);
+void top(Stack *stack) {
+	if (stack->size != 0)
+		printf("%d\n", stack->data[stack->size - 1]);
 
 	else
 		printf("%d\n", -1);
 }
 
-void size() {
-	printf("%d\n", count);
+void size(Stack *stack) {
+	printf("%d\n", stack->size);
 }
-void empty() {
 
-	if (count != 0) {
+void empty(Stack *stack) {
+
+	if (stack->size != 0) {
 		printf("0\n");
 	}
 
@@ -43,32 +44,35 @@ void empty() {
 		printf("1\n");
 	}
 }
-int main() {
+
+int main(void) {
 	int n;
-	char stack[10];
+	char input[10];
+	Stack stack;
+	stack.size = 0;
 
 	scanf("%d", &n); 
 
 	int number[100]; 
 
 	for (int i = 0; i < n; i++) {
-		scanf("%s", &stack);
-		if (strcmp(stack, "push") == 0) {
+		scanf("%s", &input);
+		if (strcmp(input, "push") == 0) {
 			int num;
 			scanf("%d", &num);
-			push(num);
+			push(&stack, num);
 		}
-		else if (strcmp(stack, "pop") == 0) {
-			pop();
+		else if (strcmp(input, "pop") == 0) {
+			pop(&stack);
 		}
-		else if (strcmp(stack, "top") == 0) {
-			top();
+		else if (strcmp(input, "top") == 0) {
+			top(&stack);
 		}
-		else if (strcmp(stack, "size") == 0) {
-			size();
+		else if (strcmp(input, "size") == 0) {
+			size(&stack);
 		}
-		else if (strcmp(stack, "empty") == 0) {
-			empty();
+		else if (strcmp(input, "empty") == 0) {
+			empty(&stack);
 		}
 	}
 }
