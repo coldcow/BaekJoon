@@ -5,45 +5,66 @@
 typedef char element;
 
 typedef struct {
-	element data[101];
+	element *data;
 	int size;
 } Stack;
 
 void push(Stack* stack, const char *input) {
-	stack->data[stack->size++] = input;
+	stack->data[stack->size++] = *input;
 }
 
 char pop(Stack* stack) {
 	return stack->data[--stack->size];
 }
 
+int is_empty(Stack *stack) {
+	if (stack->size == 0)
+		return 1;
+	return 0;
+}
+
+void check_matching(char input[], int len) {
+	Stack stack;
+
+	for (int i = 0; i < len; i++) {
+		switch (input[i]) {
+		case '(':
+			push(&stack, input[i]);
+			break;
+		case ')':
+			if (is_empty(&stack)) {
+				printf("NO\n");
+				return 0;
+			}
+			if (pop(&stack) == '(')
+				continue;
+			printf("NO\n");
+			return 0;
+		case '[':
+			push(&stack, input[i]);
+			break;
+		case ']':
+			if (is_empty(&stack)) {
+				printf("NO\n");
+				return 0;
+			}
+			if (pop(&stack) == '[')
+				continue;
+			printf("NO\n");
+			return 0;
+		}
+	}
+	printf("YES\n");
+}
+
 int main(void)
 {
-	Stack stack;
-	char *input[100];
+	char input[500];
 
 	do {
-		scanf("%s", input);
+		scanf("%s", &input);
 
-		for (int i = 0; i < strlen(input); i++) {
-			switch ((char)*input[i]) {
-			case ')':
-				if (stack.data[i - 1] == '(')
-					pop(&stack);
-				break;
-			case ']':
-				if (stack.data[i - 1] == '[')
-					pop(&stack);
-				break;
-			}
-
-			push(&stack, input[i]);
-		}
-
-		if (stack.size == 0)
-			printf("yes\n");
-		else
-			printf("no\n");
+		check_matching(input, strlen(input));
 
 	} while (input[0] != '.');
 
