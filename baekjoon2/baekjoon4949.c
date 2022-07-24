@@ -2,71 +2,96 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef char element;
+#define SIZE 102
 
-typedef struct {
-	element *data;
-	int size;
-} Stack;
-
-void push(Stack* stack, const char *input) {
-	stack->data[stack->size++] = *input;
-}
-
-char pop(Stack* stack) {
-	return stack->data[--stack->size];
-}
-
-int is_empty(Stack *stack) {
-	if (stack->size == 0)
-		return 1;
-	return 0;
-}
-
-void check_matching(char input[], int len) {
-	Stack stack;
-
-	for (int i = 0; i < len; i++) {
-		switch (input[i]) {
-		case '(':
-			push(&stack, input[i]);
-			break;
-		case ')':
-			if (is_empty(&stack)) {
-				printf("NO\n");
-				return 0;
-			}
-			if (pop(&stack) == '(')
-				continue;
-			printf("NO\n");
-			return 0;
-		case '[':
-			push(&stack, input[i]);
-			break;
-		case ']':
-			if (is_empty(&stack)) {
-				printf("NO\n");
-				return 0;
-			}
-			if (pop(&stack) == '[')
-				continue;
-			printf("NO\n");
-			return 0;
-		}
-	}
-	printf("YES\n");
-}
-
-int main(void)
+typedef struct
 {
-	char input[500];
+	char stack[SIZE];
+	int n;
+}StackType;
 
-	do {
-		scanf("%s", &input);
+void init_stack(StackType* s)
+{
+	s->n = -1;
+}
 
-		check_matching(input, strlen(input));
+int is_full(StackType* s)
+{
+	return s->n == SIZE - 1;
+}
 
-	} while (input[0] != '.');
+int is_empty(StackType* s)
+{
+	return s->n == -1;
+}
+
+void push(StackType* s, char e)
+{
+	if (is_full(s))
+		return;
+
+	s->stack[++s->n] = e;
+}
+
+char pop(StackType* s)
+{
+	if (is_empty(s))
+		return '!';
+
+	char tmp = s->stack[s->n--];
+	return tmp;
+}
+
+int main()
+{
+	StackType s;
+	init_stack(&s);
+
+	int i, chk = 1;
+	char text[SIZE], e;
+
+	while (1)
+	{
+		fgets(text, SIZE, stdin);
+
+		if (strcmp(text, ".\n") == 0)
+			break;
+
+		for (i = 0; i < strlen(text); i++)
+		{
+			if (text[i] == '(' || text[i] == '[')
+				push(&s, text[i]);
+			else if (text[i] == ')')
+			{
+				e = pop(&s);
+				if (e != '(')
+				{
+					chk = 0;
+					break;
+				}
+			}
+			else if (text[i] == ']')
+			{
+				e = pop(&s);
+				if (e != '[')
+				{
+					chk = 0;
+					break;
+				}
+			}
+		}
+		if (!is_empty(&s))
+			chk = 0;
+
+		if (chk == 0)
+			printf("no\n");
+		else
+			printf("yes\n");
+
+		s.n = -1;
+		chk = 1;
+	}
 
 	return 0;
 }
+
