@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SIZE 102
+#define SIZE 105
 
 typedef struct
 {
@@ -94,4 +94,3 @@ int main()
 
 	return 0;
 }
-
